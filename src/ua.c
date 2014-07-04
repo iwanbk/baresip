@@ -283,6 +283,10 @@ static void call_event_handler(struct call *call, enum call_event ev,
 		ua_event(ua, UA_EVENT_CALL_ESTABLISHED, call, peeruri);
 		break;
 
+	case CALL_EVENT_HANGUP:
+		ua_printf(ua, "Fire Call hangup: %s\n", peeruri);
+		ua_event(ua, UA_EVENT_CALL_HANGUP, call, str);
+		break;
 	case CALL_EVENT_CLOSED:
 		if (call_scode(call)) {
 			const char *tone;
@@ -290,6 +294,7 @@ static void call_event_handler(struct call *call, enum call_event ev,
 			if (tone)
 				(void)play_file(&ua->play, tone, 1);
 		}
+		ua_printf(ua, "Fire Call closed: %s\n", peeruri);
 		ua_event(ua, UA_EVENT_CALL_CLOSED, call, str);
 		mem_deref(call);
 		break;

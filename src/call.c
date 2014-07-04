@@ -644,6 +644,7 @@ int call_hangup(struct call *call, uint16_t scode, const char *reason)
 		     call->peer_uri);
 
 		call->sess = mem_deref(call->sess);
+        call_event_handler(call, CALL_EVENT_HANGUP, reason);
 		break;
 	}
 

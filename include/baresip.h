@@ -53,6 +53,7 @@ enum call_event {
 	CALL_EVENT_PROGRESS,
 	CALL_EVENT_ESTABLISHED,
 	CALL_EVENT_CLOSED,
+	CALL_EVENT_HANGUP,
 	CALL_EVENT_TRANSFER,
 };
 
@@ -92,6 +93,7 @@ struct ua    *call_get_ua(const struct call *call);
 /** Defines the configuration line handler */
 typedef int (confline_h)(const struct pl *addr);
 
+int load_module2(struct mod **modp, const struct pl *name);
 int  conf_configure(void);
 int  conf_modules(void);
 void conf_path_set(const char *path);
@@ -466,6 +468,7 @@ enum ua_event {
 	UA_EVENT_CALL_PROGRESS,
 	UA_EVENT_CALL_ESTABLISHED,
 	UA_EVENT_CALL_CLOSED,
+	UA_EVENT_CALL_HANGUP,
 
 	UA_EVENT_MAX,
 };
