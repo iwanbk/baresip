@@ -87,6 +87,33 @@ static int load_module(struct mod **modp, const struct pl *modpath,
 	return err;
 }
 
+#ifdef STATIC
+int load_module2(struct mod **modp, const struct pl *name)
+{
+	struct mod *m = NULL;
+	int err = 0;
+
+	if (!name)
+		return EINVAL;
+
+	/* Try static */
+	err = mod_add(&m, find_module(name));
+	if (!err)
+		goto out;
+
+	if (modp)
+		*modp = m;
+
+ out:
+	if (err) {
+		warning("module %r: %m\n", name, err);
+	}
+
+	return err;
+}
+#endif
+
+
 
 static int module_handler(const struct pl *val, void *arg)
 {
