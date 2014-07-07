@@ -488,7 +488,7 @@ typedef void (options_resp_h)(int err, const struct sip_msg *msg, void *arg);
 int  ua_alloc(struct ua **uap, const char *aor);
 int  ua_connect(struct ua *ua, struct call **callp,
 		const char *from_uri, const char *uri,
-		const char *params, enum vidmode vmode);
+		const char *params, enum vidmode vmode, const char *extra_hdrs);
 void ua_hangup(struct ua *ua, struct call *call,
 	       uint16_t scode, const char *reason);
 int  ua_answer(struct ua *ua, struct call *call);

@@ -78,7 +78,7 @@ struct call {
 };
 
 
-static int send_invite(struct call *call);
+static int send_invite(struct call *call, const char *extra_hdrs);
 
 
 static const char *state_name(enum state st)
@@ -254,7 +254,7 @@ static void mnat_handler(int err, uint16_t scode, const char *reason,
 	switch (call->state) {
 
 	case STATE_OUTGOING:
-		(void)send_invite(call);
+		(void)send_invite(call, NULL);
 		break;
 
 	case STATE_INCOMING:
@@ -558,7 +558,7 @@ int call_alloc(struct call **callp, const struct config *cfg, struct list *lst,
 }
 
 
-int call_connect(struct call *call, const struct pl *paddr)
+int call_connect(struct call *call, const struct pl *paddr, const char *extra_hdrs)
 {
 	struct sip_addr addr;
 	int err;
@@ -585,7 +585,7 @@ int call_connect(struct call *call, const struct pl *paddr)
 	/* If we are using asyncronous medianat like STUN/TURN, then
 	 * wait until completed before sending the INVITE */
 	if (!call->acc->mnat)
-		err = send_invite(call);
+		err = send_invite(call, extra_hdrs);
 
 	return err;
 }
@@ -1322,7 +1322,7 @@ static void sipsess_progr_handler(const struct sip_msg *msg, void *arg)
 }
 
 
-static int send_invite(struct call *call)
+static int send_invite(struct call *call, const char *extra_hdrs)
 {
 	const char *routev[1];
 	struct mbuf *desc;
@@ -1346,7 +1346,7 @@ static int send_invite(struct call *call)
 			      sipsess_offer_handler, sipsess_answer_handler,
 			      sipsess_progr_handler, sipsess_estab_handler,
 			      sipsess_info_handler, sipsess_refer_handler,
-			      sipsess_close_handler, call,
+			      sipsess_close_handler, call, extra_hdrs,
 			      "Allow: %s\r\n%H", uag_allowed_methods(),
 			      ua_print_supported, call->ua);
 	if (err) {

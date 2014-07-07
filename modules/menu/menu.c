@@ -189,7 +189,7 @@ static int dial_handler(struct re_printf *pf, void *arg)
 		(void)mbuf_write_str(dialbuf, carg->prm);
 
 		err = ua_connect(uag_cur(), NULL, NULL,
-				 carg->prm, NULL, VIDMODE_ON);
+				 carg->prm, NULL, VIDMODE_ON, NULL);
 	}
 	else if (dialbuf->end > 0) {
 
@@ -200,7 +200,7 @@ static int dial_handler(struct re_printf *pf, void *arg)
 		if (err)
 			return err;
 
-		err = ua_connect(uag_cur(), NULL, NULL, uri, NULL, VIDMODE_ON);
+		err = ua_connect(uag_cur(), NULL, NULL, uri, NULL, VIDMODE_ON, NULL);
 
 		mem_deref(uri);
 	}
