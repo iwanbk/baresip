@@ -284,7 +284,7 @@ static void call_event_handler(struct call *call, enum call_event ev,
 				(void)play_file(&ua->play, "ring.wav", -1);
 			}
 
-			ua_event(ua, UA_EVENT_CALL_INCOMING, call, peeruri);
+			ua_event(ua, UA_EVENT_CALL_INCOMING, call, str);
 			break;
 		}
 		break;

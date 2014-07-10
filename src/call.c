@@ -206,7 +206,6 @@ static void call_event_handler(struct call *call, enum call_event ev,
 	va_start(ap, fmt);
 	(void)re_vsnprintf(buf, sizeof(buf), fmt, ap);
 	va_end(ap);
-
 	eh(call, ev, buf, eh_arg);
 }
 
@@ -1258,8 +1257,40 @@ int call_accept(struct call *call, struct sipsess_sock *sess_sock,
 	/* New call */
 	tmr_start(&call->tmr_inv, LOCAL_TIMEOUT*1000, invite_timeout, call);
 
-	if (!call->acc->mnat)
-		call_event_handler(call, CALL_EVENT_INCOMING, call->peer_uri);
+	if (!call->acc->mnat) {
+        struct le *le;
+        char *xhdr;
+        asprintf(&xhdr,"");
+
+        le = list_head(&msg->hdrl);
+        while (le) {
+            char *name, *val;
+            const struct sip_hdr *hdr = le->data;
+            char *tmp;
+
+            le = le->next;
+
+            if (pl_strdup(&name, &hdr->name) != 0) {
+                continue;
+            }
+            if (pl_strdup(&val, &hdr->val) != 0) {
+                continue;
+            }
+
+            if (strlen(name) > 5 && (memcmp(name, "X-PH-", 5) == 0 || memcmp(name, "X-Ph-", 5) == 0 )){
+                asprintf(&tmp, "%s: %s\r\n", (const char *) name, (const char *)val);
+                xhdr = (char *)realloc(xhdr, strlen(xhdr) + strlen(tmp));
+                if (!xhdr)
+                    break;
+                xhdr = strcat(xhdr, tmp);
+                free(tmp);
+            }
+        }
+		//call_event_handler(call, CALL_EVENT_INCOMING, call->peer_uri);
+		call_event_handler(call, CALL_EVENT_INCOMING, xhdr);
+        if (xhdr)
+            free(xhdr);
+    }
 
 	return err;
 }
