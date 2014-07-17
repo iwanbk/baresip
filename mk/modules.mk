@@ -48,11 +48,13 @@
 
 # Default is enabled
 MOD_AUTODETECT := 1
+USE_OPUS  := 1
 
 ifneq ($(MOD_AUTODETECT),)
 
 USE_CONS  := 1
 USE_G711  := 1
+USE_OPUS  := 1
 USE_L16   := 1
 
 ifneq ($(OS),win32)
@@ -103,9 +105,6 @@ USE_ISAC := $(shell [ -f $(SYSROOT)/include/isac.h ] || \
 USE_MPG123  := $(shell [ -f $(SYSROOT)/include/mpg123.h ] || \
 	[ -f $(SYSROOT)/local/include/mpg123.h ] || \
 	[ -f $(SYSROOT_ALT)/include/mpg123.h ] && echo "yes")
-USE_OPUS := $(shell [ -f $(SYSROOT)/include/opus/opus.h ] || \
-	[ -f $(SYSROOT_ALT)/include/opus/opus.h ] || \
-	[ -f $(SYSROOT)/local/include/opus/opus.h ] && echo "yes")
 USE_OSS := $(shell [ -f $(SYSROOT)/include/soundcard.h ] || \
 	[ -f $(SYSROOT)/include/linux/soundcard.h ] || \
 	[ -f $(SYSROOT)/include/sys/soundcard.h ] && echo "yes")

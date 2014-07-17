@@ -6,7 +6,7 @@
 
 #include <re.h>
 #include <baresip.h>
-#include <opus/opus.h>
+#include <rem.h>
 #include "opus.h"
 
 

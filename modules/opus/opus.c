@@ -6,7 +6,7 @@
 
 #include <re.h>
 #include <baresip.h>
-#include <opus/opus.h>
+#include <rem.h>
 #include "opus.h"
 
 
@@ -27,15 +27,19 @@
 
 
 static struct aucodec opus = {
+    .le        = LE_INIT,
+    .pt        = "123",
 	.name      = "opus",
 	.srate     = 48000,
 	.ch        = 2,
-	.fmtp      = "stereo=1;sprop-stereo=1",
+	.fmtp      = "useinbandfec=1",
 	.encupdh   = opus_encode_update,
 	.ench      = opus_encode_frm,
 	.decupdh   = opus_decode_update,
 	.dech      = opus_decode_frm,
 	.plch      = opus_decode_pkloss,
+    .fmtp_ench = NULL,
+    .fmtp_cmph = NULL,
 };
 
 
